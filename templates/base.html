@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#542638">
+
+    <meta name="description"
+          content="Diabetes Risk Predictor - Machine Learning Research Project">
+
+    <title>{% block title %}Diabetes Risk Predictor{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<header class="site-header">
+    <div class="container nav-inner">
+
+        <a class="brand" href="{{ url_for('home') }}">
+            <span class="brand-mark">✚</span>
+
+            <span class="brand-copy">
+                <strong>Diabetes <span>Risk</span></strong>
+                <small>MACHINE LEARNING INSIGHTS</small>
+            </span>
+        </a>
+
+        <nav class="nav-links">
+            <a class="{% if request.endpoint == 'home' %}active{% endif %}"
+               href="{{ url_for('home') }}">Home</a>
+
+            <a href="{{ url_for('home') }}#predict">Risk Assessment</a>
+
+            <a class="{% if request.endpoint == 'accuracy' %}active{% endif %}"
+               href="{{ url_for('accuracy') }}">Model Insights</a>
+
+            <a class="{% if request.endpoint == 'about' %}active{% endif %}"
+               href="{{ url_for('about') }}">About</a>
+        </nav>
+
+        <a class="nav-cta" href="{{ url_for('home') }}#predict">
+            Get Started <span>↗</span>
+        </a>
+
+    </div>
+</header>
+
+<main class="container page-main">
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+    <div class="container footer-inner">
+
+        <div class="footer-brand">
+            <span class="brand-mark">✚</span>
+            <strong>Diabetes Risk Predictor</strong>
+        </div>
+
+        <p>Machine Learning Research Project</p>
+
+        <p class="footer-disclaimer">
+            Educational purpose only. This system is not a medical
+            device and does not provide medical diagnosis.
+        </p>
+
+    </div>
+</footer>
+
+</body>
+</html>

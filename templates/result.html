@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Prediction Result | Diabetes Risk Prediction{% endblock %}
+{% block content %}
+<section class="card result {% if is_higher_risk %}result-high{% else %}result-low{% endif %}">
+  <p class="result-label">Prediction from the selected model</p>
+  <h1>{% if is_higher_risk %}Higher model-predicted risk{% else %}Lower model-predicted risk{% endif %}</h1>
+  <p class="score">Selected algorithm: <strong>{{ best_algorithm }}</strong></p>
+  <p class="score">Model score: <strong>{{ "%.2f"|format(score * 100) }}%</strong></p>
+  <p class="small">This is the model's output score, not a clinically calibrated personal probability or diagnosis.</p>
+</section>
+{% if age_warning %}<div class="alert alert-warn">You entered an age below 21. The training dataset mainly represents adults aged 21 and above, so this result may be less reliable.</div>{% endif %}
+<section class="card">
+  <h2>Predictions from all four algorithms</h2>
+  <p class="small">Each model evaluated the same input values. The selected model is the one with the highest test accuracy from the training comparison.</p>
+  <div class="table-scroll"><table class="table">
+    <thead><tr><th>Algorithm</th><th>Predicted group</th><th>Model score</th></tr></thead>
+    <tbody>{% for item in model_predictions %}
+      <tr class="{% if item.algorithm == best_algorithm %}best-row{% endif %}">
+        <td>{{ item.algorithm }}{% if item.algorithm == best_algorithm %}<span class="best-tag">Selected model</span>{% endif %}</td>
+        <td>{{ item.prediction }}</td><td>{{ "%.2f"|format(item.score * 100) }}%</td>
+      </tr>
+    {% endfor %}</tbody>
+  </table></div>
+</section>
+<section class="card">
+  <h2>{% if is_higher_risk %}What you should consider{% else %}General health recommendations{% endif %}</h2>
+  <ul>{% for item in recommendations %}<li>{{ item }}</li>{% endfor %}</ul>
+  <p>A low model score does not rule out diabetes, and a high score does not confirm it. Please consult a qualified healthcare professional for medical advice and appropriate laboratory testing.</p>
+</section>
+<section class="card">
+  <h2>Values you entered</h2>
+  <div class="table-scroll"><table class="table"><thead><tr><th>Measurement</th><th>Value</th><th>Unit</th></tr></thead><tbody>
+  {% for v in shown_values %}<tr><td>{{ v.label }}</td><td>{{ v.value }}</td><td>{{ v.unit }}</td></tr>{% endfor %}
+  </tbody></table></div>
+  <a class="btn" href="{{ url_for('home') }}#predict">Try another prediction</a>
+  <a class="btn btn-secondary" href="{{ url_for('accuracy') }}">View algorithm comparison</a>
+</section>
+<p class="notice">Educational MCA project only. The models are not clinically validated and must not be used to make medical decisions.</p>
+{% endblock %}

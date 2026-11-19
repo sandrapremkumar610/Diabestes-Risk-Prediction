@@ -1,0 +1,329 @@
+{% extends "base.html" %}
+
+{% block title %}
+Home | Diabetes Risk Predictor
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO SECTION -->
+<section class="hero-home">
+
+    <div class="hero-copy">
+
+        <div class="eyebrow">
+            <span class="eyebrow-dot"></span>
+            MACHINE LEARNING · HEALTH INSIGHTS
+        </div>
+
+        <h1>
+            Understand Your Health Data.
+            <br>
+            <span>Explore Risk With Intelligence.</span>
+        </h1>
+
+        <p class="hero-lead">
+            Discover how machine learning can analyze health
+            measurements and identify diabetes risk patterns.
+
+            Compare four classification algorithms through
+            one intelligent prediction platform.
+        </p>
+
+        <div class="hero-actions">
+
+            <a href="#predict" class="btn btn-light">
+                Start Risk Assessment →
+            </a>
+
+            <a href="{{ url_for('accuracy') }}" class="btn btn-ghost">
+                Explore Model Insights
+            </a>
+
+        </div>
+
+        <div class="hero-trust">
+            <span class="trust-icon">✓</span>
+            Educational Analysis
+            <span class="trust-divider">·</span>
+            Four ML Algorithms
+            <span class="trust-divider">·</span>
+            Performance Comparison
+        </div>
+
+    </div>
+
+    <!-- HERO VISUAL -->
+    <div class="hero-visual">
+
+        <div class="visual-orbit orbit-one"></div>
+        <div class="visual-orbit orbit-two"></div>
+
+        <div class="visual-core">
+            <span class="core-cross">✚</span>
+            <strong>RISK<br>INSIGHTS</strong>
+            <small>ML ANALYSIS</small>
+        </div>
+
+        <div class="float-card float-top">
+            <span class="float-icon">⌁</span>
+            <span>
+                <small>MODEL APPROACH</small>
+                <strong>Machine Learning</strong>
+            </span>
+        </div>
+
+        <div class="float-card float-bottom">
+            <span class="float-icon">▥</span>
+            <span>
+                <small>MODEL COMPARISON</small>
+                <strong>4 Algorithms</strong>
+            </span>
+        </div>
+
+        <div class="visual-caption">
+            Turning health measurements into understandable
+            machine learning insights.
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FEATURE STRIP -->
+<section class="feature-strip">
+
+    <div class="feature-item">
+        <span class="feature-symbol">◈</span>
+        <div>
+            <strong>8 Health Attributes</strong>
+            <small>Structured input data</small>
+        </div>
+    </div>
+
+    <div class="feature-item">
+        <span class="feature-symbol">⌘</span>
+        <div>
+            <strong>4 ML Algorithms</strong>
+            <small>Model performance comparison</small>
+        </div>
+    </div>
+
+    <div class="feature-item">
+        <span class="feature-symbol">▥</span>
+        <div>
+            <strong>Performance Dashboard</strong>
+            <small>Metrics and accuracy charts</small>
+        </div>
+    </div>
+
+</section>
+
+
+<!-- PROJECT INTRODUCTION -->
+<section class="intro-section">
+
+    <div class="section-heading">
+        <div>
+            <p class="section-kicker">THE PROJECT</p>
+            <h2>A Smarter Way to Explore Diabetes Risk</h2>
+        </div>
+
+        <p>
+            This platform demonstrates how supervised machine
+            learning algorithms can classify patterns in a
+            diabetes dataset.
+        </p>
+    </div>
+
+
+    <!-- ALGORITHM CARDS -->
+    <div class="algorithm-grid">
+
+        <article class="algorithm-card">
+            <span class="algorithm-number">01</span>
+            <div class="algorithm-icon">ƒ(x)</div>
+            <h3>Logistic Regression</h3>
+            <p>
+                A classification algorithm used to estimate
+                the probability of a binary outcome.
+            </p>
+        </article>
+
+        <article class="algorithm-card">
+            <span class="algorithm-number">02</span>
+            <div class="algorithm-icon">⑂</div>
+            <h3>Decision Tree</h3>
+            <p>
+                A rule-based algorithm that makes predictions
+                through decision paths.
+            </p>
+        </article>
+
+        <article class="algorithm-card">
+            <span class="algorithm-number">03</span>
+            <div class="algorithm-icon">▦</div>
+            <h3>Random Forest</h3>
+            <p>
+                An ensemble learning method that combines
+                multiple decision trees.
+            </p>
+        </article>
+
+        <article class="algorithm-card">
+            <span class="algorithm-number">04</span>
+            <div class="algorithm-icon">◎</div>
+            <h3>Support Vector Machine</h3>
+            <p>
+                A classification algorithm that finds
+                a separating boundary between classes.
+            </p>
+        </article>
+
+    </div>
+
+
+    <div class="insight-link">
+        <span>Compare the performance of all four algorithms.</span>
+        <a href="{{ url_for('accuracy') }}">View Model Comparison →</a>
+    </div>
+
+</section>
+
+
+<!-- HEALTH ASSESSMENT FORM -->
+<section class="assessment-section" id="predict">
+
+    <div class="assessment-heading">
+
+        <div>
+            <p class="section-kicker">PERSONALIZED INPUT</p>
+            <h2>Health Risk Assessment</h2>
+            <p>
+                Enter your health measurements to explore
+                predictions from the trained machine learning models.
+            </p>
+        </div>
+
+        <div class="step-indicator">
+            <span>01</span>
+            <div>
+                <strong>Health Profile</strong>
+                <small>Complete all fields</small>
+            </div>
+        </div>
+
+    </div>
+
+
+    {% if model_error %}
+        <div class="alert alert-error">
+            {{ model_error }}
+        </div>
+    {% endif %}
+
+    {% if errors %}
+        <div class="alert alert-error">
+            Please correct the highlighted fields.
+        </div>
+    {% endif %}
+
+
+    <form method="POST"
+          action="{{ url_for('predict') }}"
+          novalidate
+          class="assessment-form">
+
+        <div class="form-intro">
+            <span class="form-intro-icon">✚</span>
+            <div>
+                <strong>Health Information</strong>
+                <small>Enter the requested health measurements below.</small>
+            </div>
+        </div>
+
+
+        <div class="form-grid">
+
+            {% for f in fields %}
+
+            <div class="form-group">
+
+                <label for="{{ f.name }}">
+                    {{ f.label }}
+                    <span class="unit">({{ f.unit }})</span>
+                </label>
+
+                <input
+                    type="number"
+                    id="{{ f.name }}"
+                    name="{{ f.name }}"
+                    min="{{ f.min }}"
+                    max="{{ f.max }}"
+                    step="{{ f.step }}"
+                    value="{{ values.get(f.name, '') }}"
+                    placeholder="Enter {{ f.label|lower }}"
+                    class="{% if errors.get(f.name) %}input-error{% endif %}"
+                    required
+                >
+
+                <small>{{ f.help }}</small>
+
+                {% if errors.get(f.name) %}
+                    <div class="field-error">
+                        {{ errors[f.name] }}
+                    </div>
+                {% endif %}
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <div class="form-submit-row">
+
+            <p>
+                <span class="required-star">*</span>
+                All measurements are required.
+            </p>
+
+            <button type="submit" class="btn btn-primary">
+                Analyze Health Data →
+            </button>
+
+        </div>
+
+    </form>
+
+
+    <p class="form-disclaimer">
+        <strong>Important:</strong>
+        This is an academic machine learning demonstration.
+        It is not a medical screening or diagnostic tool.
+        Do not use predictions to make healthcare decisions.
+    </p>
+
+</section>
+
+
+<!-- DISCLAIMER -->
+<section class="bottom-note">
+
+    <div class="bottom-note-icon">i</div>
+
+    <div>
+        <strong>Use Results Responsibly</strong>
+        <p>
+            The prediction results are based on patterns in the
+            training dataset. For medical testing, diagnosis or
+            treatment advice, consult a qualified healthcare
+            professional.
+        </p>
+    </div>
+
+</section>
+
+{% endblock %}

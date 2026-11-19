@@ -1,0 +1,584 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+Algorithm Dashboard | Diabetes Risk Prediction
+{% endblock %}
+
+{% block content %}
+
+<div class="accuracy-dashboard">
+
+    <!-- DASHBOARD HEADER -->
+
+    <section class="dashboard-header">
+
+        <div class="dashboard-heading">
+            <span class="dashboard-label">
+                MACHINE LEARNING ANALYTICS
+            </span>
+
+            <h1>Algorithm Performance</h1>
+
+            <p>
+                Explore, evaluate and compare the performance
+                of different machine learning algorithms.
+            </p>
+        </div>
+
+        <div class="dashboard-header-icon">
+            <i class="fas fa-chart-line"></i>
+        </div>
+
+    </section>
+
+
+    <!-- SUMMARY SECTION -->
+
+    <section class="dashboard-summary">
+
+        <!-- BEST ALGORITHM -->
+
+        <div class="summary-panel best-model-panel">
+
+            <div class="summary-top">
+                <div>
+                    <span class="summary-label">
+                        BEST PERFORMING MODEL
+                    </span>
+
+                    <h2>
+                        {{ m.best_algorithm }}
+                    </h2>
+                </div>
+
+                <div class="summary-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+            </div>
+
+            <div class="summary-bottom">
+                <div>
+                    <span class="summary-caption">
+                        Highest accuracy
+                    </span>
+
+                    <h3>
+                        {% if m.algorithms and m.best_algorithm in m.algorithms %}
+                            {{ "%.2f"|format(m.algorithms[m.best_algorithm].accuracy * 100) }}%
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </h3>
+                </div>
+
+                <span class="summary-status">
+                    <i class="fas fa-check-circle"></i>
+                    Top performer
+                </span>
+            </div>
+
+        </div>
+
+
+        <!-- TEST RECORDS -->
+
+        <div class="summary-panel records-panel">
+
+            <div class="summary-top">
+                <div>
+                    <span class="summary-label">
+                        TESTING RECORDS
+                    </span>
+
+                    <h2>{{ m.testing_records }}</h2>
+                </div>
+
+                <div class="summary-icon">
+                    <i class="fas fa-database"></i>
+                </div>
+            </div>
+
+            <div class="summary-bottom">
+                <div>
+                    <span class="summary-caption">
+                        Total dataset records
+                    </span>
+
+                    <h3>{{ m.total_records }}</h3>
+                </div>
+
+                <span class="summary-status records-status">
+                    <i class="fas fa-chart-bar"></i>
+                    Evaluation data
+                </span>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ALGORITHM OVERVIEW -->
+
+    <section class="dashboard-section">
+
+        <div class="section-heading">
+            <div>
+                <span class="section-number">01</span>
+                <h2>Accuracy Overview</h2>
+                <p>
+                    Visual comparison of the accuracy achieved
+                    by each classification algorithm.
+                </p>
+            </div>
+
+            <span class="section-tag">
+                <i class="fas fa-chart-column"></i>
+                Performance analysis
+            </span>
+        </div>
+
+
+        <div class="chart-panel">
+
+            <div class="chart-heading">
+                <div>
+                    <h3>Algorithm Accuracy</h3>
+                    <p>Accuracy percentage on the test dataset</p>
+                </div>
+
+                <span class="chart-unit">SCORE (%)</span>
+            </div>
+
+            <div class="dashboard-chart">
+                <canvas
+                    id="accuracyChart"
+                    aria-label="Algorithm accuracy comparison chart">
+                </canvas>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- DETAILED PERFORMANCE TABLE -->
+
+    <section class="dashboard-section">
+
+        <div class="section-heading">
+            <div>
+                <span class="section-number">02</span>
+                <h2>Detailed Performance</h2>
+                <p>
+                    Compare all evaluation metrics for the
+                    machine learning models.
+                </p>
+            </div>
+
+            <span class="section-tag">
+                <i class="fas fa-table"></i>
+                Model comparison
+            </span>
+        </div>
+
+
+        <div class="performance-panel">
+
+            <div class="table-heading">
+                <div>
+                    <h3>Performance Metrics</h3>
+                    <p>Results of all evaluated algorithms</p>
+                </div>
+
+                <span class="algorithm-count">
+                    {{ m.algorithms|length }} Algorithms
+                </span>
+            </div>
+
+
+            <div class="table-scroll">
+
+                <table class="dashboard-table">
+
+                    <thead>
+                        <tr>
+                            <th>Algorithm</th>
+                            <th>Accuracy</th>
+                            <th>Precision</th>
+                            <th>Recall</th>
+                            <th>F1 Score</th>
+                            <th>ROC-AUC</th>
+                        </tr>
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for name, values in m.algorithms|dictsort %}
+
+                        <tr class="{% if name == m.best_algorithm %}top-model-row{% endif %}">
+
+                            <td class="algorithm-name">
+
+                                <span class="algorithm-dot"></span>
+
+                                {{ name }}
+
+                                {% if name == m.best_algorithm %}
+                                    <span class="best-model-tag">
+                                        BEST
+                                    </span>
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+                                <strong class="accuracy-value">
+                                    {{ "%.2f"|format(values.accuracy * 100) }}%
+                                </strong>
+                            </td>
+
+                            <td>
+                                {{ "%.2f"|format(values.precision * 100) }}%
+                            </td>
+
+                            <td>
+                                {{ "%.2f"|format(values.recall * 100) }}%
+                            </td>
+
+                            <td>
+                                {{ "%.2f"|format(values.f1_score * 100) }}%
+                            </td>
+
+                            <td>
+                                {{ "%.3f"|format(values.roc_auc) }}
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- DATASET INFORMATION -->
+
+    <section class="dashboard-section">
+
+        <div class="section-heading">
+            <div>
+                <span class="section-number">03</span>
+                <h2>Dataset & Training Information</h2>
+                <p>
+                    Details about the dataset and model evaluation process.
+                </p>
+            </div>
+        </div>
+
+
+        <div class="dataset-panel">
+
+            <div class="dataset-title">
+                <div class="dataset-icon">
+                    <i class="fas fa-folder-open"></i>
+                </div>
+
+                <div>
+                    <h3>Dataset Details</h3>
+                    <p>{{ m.dataset }}</p>
+                </div>
+            </div>
+
+
+            <div class="dataset-grid">
+
+                <div class="dataset-item">
+                    <span>Total Records</span>
+                    <strong>{{ m.total_records }}</strong>
+                </div>
+
+                <div class="dataset-item">
+                    <span>Training Records</span>
+                    <strong>{{ m.training_records }}</strong>
+                </div>
+
+                <div class="dataset-item">
+                    <span>Testing Records</span>
+                    <strong>{{ m.testing_records }}</strong>
+                </div>
+
+                <div class="dataset-item">
+                    <span>Selection Metric</span>
+                    <strong>{{ m.selection_metric|upper }}</strong>
+                </div>
+
+                <div class="dataset-item dataset-date">
+                    <span>Model Trained On</span>
+                    <strong>{{ m.trained_on }}</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- METRIC EXPLANATION -->
+
+    <section class="dashboard-section">
+
+        <div class="section-heading">
+            <div>
+                <span class="section-number">04</span>
+                <h2>Understanding the Metrics</h2>
+                <p>
+                    Key measurements used to evaluate model performance.
+                </p>
+            </div>
+        </div>
+
+
+        <div class="metric-explanation-grid">
+
+            <div class="metric-info-card">
+                <span class="metric-info-icon">
+                    <i class="fas fa-bullseye"></i>
+                </span>
+                <h3>Accuracy</h3>
+                <p>
+                    Measures the overall percentage of correct predictions.
+                </p>
+            </div>
+
+
+            <div class="metric-info-card">
+                <span class="metric-info-icon">
+                    <i class="fas fa-crosshairs"></i>
+                </span>
+                <h3>Precision</h3>
+                <p>
+                    Measures how many predicted positive cases were actually positive.
+                </p>
+            </div>
+
+
+            <div class="metric-info-card">
+                <span class="metric-info-icon">
+                    <i class="fas fa-search"></i>
+                </span>
+                <h3>Recall</h3>
+                <p>
+                    Measures how many actual positive cases were correctly detected.
+                </p>
+            </div>
+
+
+            <div class="metric-info-card">
+                <span class="metric-info-icon">
+                    <i class="fas fa-balance-scale"></i>
+                </span>
+                <h3>F1 Score</h3>
+                <p>
+                    Represents the balance between precision and recall.
+                </p>
+            </div>
+
+
+            <div class="metric-info-card">
+                <span class="metric-info-icon">
+                    <i class="fas fa-chart-area"></i>
+                </span>
+                <h3>ROC-AUC</h3>
+                <p>
+                    Measures how effectively a model distinguishes between two classes.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- IMPORTANT NOTE -->
+
+    <section class="dashboard-note">
+
+        <div class="note-icon">
+            <i class="fas fa-info-circle"></i>
+        </div>
+
+        <div>
+            <h3>Important Information</h3>
+
+            <p>
+                {{ m.best_algorithm }} was selected because it achieved
+                the highest accuracy on this particular test dataset.
+                This result does not guarantee the same performance
+                for every population. For health screening, recall
+                and false negative results should also be considered.
+                This system is an educational prediction tool and
+                is not a substitute for professional medical advice.
+            </p>
+        </div>
+
+    </section>
+
+</div>
+
+
+<!-- CHART.JS -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const chartElement = document.getElementById("accuracyChart");
+
+    if (!chartElement || typeof Chart === "undefined") {
+        return;
+    }
+
+    const names = {{ m.algorithms.keys()|list|tojson }};
+
+    const accuracies = {{ m.algorithms.values()|map(attribute='accuracy')|list|tojson }}
+        .map(value => +(value * 100).toFixed(2));
+
+    const chartColors = [
+        "#873F58",
+        "#B76D7C",
+        "#C58A83",
+        "#542638"
+    ];
+
+    new Chart(chartElement, {
+
+        type: "bar",
+
+        data: {
+
+            labels: names,
+
+            datasets: [{
+
+                label: "Accuracy (%)",
+
+                data: accuracies,
+
+                backgroundColor: names.map(
+                    (name, index) => chartColors[index % chartColors.length]
+                ),
+
+                borderRadius: 8,
+
+                borderSkipped: false,
+
+                barThickness: 38,
+
+                maxBarThickness: 48
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            animation: {
+                duration: 1200,
+                easing: "easeOutQuart"
+            },
+
+            plugins: {
+
+                legend: {
+                    display: false
+                },
+
+                tooltip: {
+
+                    backgroundColor: "#542638",
+
+                    titleColor: "#FFFFFF",
+
+                    bodyColor: "#FFFFFF",
+
+                    padding: 12,
+
+                    displayColors: false,
+
+                    callbacks: {
+
+                        label: function (context) {
+                            return " Accuracy: " + context.raw + "%";
+                        }
+
+                    }
+
+                }
+
+            },
+
+            scales: {
+
+                y: {
+
+                    beginAtZero: true,
+
+                    max: 100,
+
+                    ticks: {
+                        stepSize: 20,
+                        color: "#887A7D"
+                    },
+
+                    title: {
+                        display: true,
+                        text: "Accuracy (%)",
+                        color: "#542638"
+                    },
+
+                    grid: {
+                        color: "#EFE5E3"
+                    }
+
+                },
+
+                x: {
+
+                    ticks: {
+                        color: "#542638"
+                    },
+
+                    grid: {
+                        display: false
+                    }
+
+                }
+
+            }
+
+        }
+
+    });
+
+});
+
+</script>
+
+{% endblock %}

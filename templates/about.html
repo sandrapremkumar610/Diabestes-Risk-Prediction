@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}About | Diabetes Risk Prediction{% endblock %}
+
+{% block content %}
+<h1>About this project</h1>
+
+<section class="card">
+  <h2>Introduction</h2>
+  <p>
+    The Diabetes Risk Prediction System is an MCA academic project. It uses supervised machine
+    learning to place a person in a lower-risk or higher-risk group for diabetes from eight
+    health measurements.
+  </p>
+</section>
+
+<section class="card">
+  <h2>Objectives</h2>
+  <ul>
+    <li>Accept health information through a simple web form.</li>
+    <li>Process the input and predict the risk group with a trained model.</li>
+    <li>Show the prediction, a model score and general health recommendations.</li>
+    <li>Show the model's real evaluation results.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2>Dataset</h2>
+  <p>
+    The Pima Indians Diabetes Dataset has 768 records and 8 input features
+    (Pregnancies, Glucose, BloodPressure, SkinThickness, Insulin, BMI, DiabetesPedigreeFunction, Age)
+    plus the Outcome (0 = non-diabetic, 1 = diabetic).
+  </p>
+  <p>
+    In Glucose, BloodPressure, SkinThickness, Insulin and BMI, a value of 0 is not a real
+    measurement. These zeros are treated as missing and filled with the median of the training data.
+  </p>
+</section>
+
+<section class="card">
+  <h2>Algorithm</h2>
+  <p>
+    Four algorithms are trained and compared: Logistic Regression, Decision Tree, Random Forest
+    and Support Vector Machine (SVM). Each uses a Scikit-learn pipeline for median imputation
+    and standard scaling. The dataset is split into 80% training data and 20% testing data
+    using stratification. All trained models and their evaluation metrics are saved using Joblib
+    and JSON respectively.
+  </p>
+</section>
+
+<section class="card">
+  <h2>Technologies</h2>
+  <p>Python, Pandas, NumPy, Scikit-learn, Joblib, Flask, HTML and CSS.</p>
+</section>
+
+<section class="card">
+  <h2>Limitations</h2>
+  <ul>
+    <li>The dataset contains only historical records of Pima Indian women aged 21 and above, so it does not represent every population, men or younger people.</li>
+    <li>With only 768 records, results vary with the train-test split.</li>
+    <li>Many records had missing values replaced by the median, which adds uncertainty.</li>
+    <li>The model score is not a clinically calibrated probability.</li>
+    <li>A lower prediction does not rule out diabetes, and a higher prediction does not confirm it.</li>
+  </ul>
+  <p class="notice">
+    This is an educational project and is not clinically validated. It must not be used to diagnose,
+    treat or rule out any medical condition. Please consult a healthcare professional for medical advice.
+  </p>
+</section>
+{% endblock %}
